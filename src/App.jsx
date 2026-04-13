@@ -4,13 +4,26 @@ import Card from "../components/Card";
 function App() {
   const [politicians, setPoliticians] = useState([]);
   const [search, setSearch] = useState("");
+  const [selected, setSelected] = useState("");
 
   const filteredPoliticians = useMemo(() => {
-    return politicians.filter(
-      (p) =>
-        p.name.toLowerCase().includes(search.toLowerCase()) ||
-        p.biography.toLowerCase().includes(search.toLowerCase()),
-    );
+    return politicians.filter((p) => {
+      const filterName = p.name.toLowerCase().includes(search.toLowerCase());
+      const filterBio = p.biography
+        .toLowerCase()
+        .includes(search.toLowerCase());
+      const filterPosition = selected === "" || selected === p.position;
+      return (filterName, filterBio) && filterPosition;
+    });
+  }, [politicians, search, selected]);
+
+  const positions = useMemo(() => {
+    return politicians.reduce((acc, p) => {
+      if (!acc.includes(p.position)) {
+        return [...acc, p.position];
+      }
+      return acc;
+    }, []);
   }, [politicians]);
 
   useEffect(() => {
@@ -23,7 +36,7 @@ function App() {
 
   return (
     <main>
-      <div>
+      <div className="title">
         <label htmlFor="search">Filtra per nome o descrizione: </label>
         <input
           value={search}
@@ -31,6 +44,22 @@ function App() {
           id="search"
           onChange={(e) => setSearch(e.target.value)}
         />
+      </div>
+
+      <div className="title">
+        <label htmlFor="select-country">Filtra per posizione: </label>
+        <select
+          value={selected}
+          onChange={(e) => setSelected(e.target.value)}
+          id="select-country"
+        >
+          <option value="">Tutti</option>
+          {positions.map((p, id) => (
+            <option key={id} value={p}>
+              {p}
+            </option>
+          ))}
+        </select>
       </div>
 
       <ul>
