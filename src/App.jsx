@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
-import CardsList from "./CardsList";
+import Card from "../components/Card";
 
 function App() {
   const [politicians, setPoliticians] = useState([]);
   const [search, setSearch] = useState("");
+
   const filteredPoliticians = politicians.filter(
     (p) =>
       p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.biography.toLowerCase().includes(search.toLowerCase()),
   );
+
   useEffect(() => {
     (async () => {
       const resp = await fetch("http://localhost:3333/politicians");
@@ -28,7 +30,12 @@ function App() {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      <CardsList politicians={filteredPoliticians} />
+
+      <ul>
+        {filteredPoliticians.map((p) => (
+          <Card key={p.id} p={p} />
+        ))}
+      </ul>
     </main>
   );
 }
