@@ -1,4 +1,8 @@
-export default function Card({ p }) {
+import { memo } from "react";
+
+const Card = memo(({ p }) => {
+  console.log("render:", p.name);
+
   return (
     <li>
       <div className="title">
@@ -13,4 +17,6 @@ export default function Card({ p }) {
       </div>
     </li>
   );
-}
+});
+
+export default Card;
