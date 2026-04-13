@@ -1,15 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Card from "../components/Card";
 
 function App() {
   const [politicians, setPoliticians] = useState([]);
   const [search, setSearch] = useState("");
 
-  const filteredPoliticians = politicians.filter(
-    (p) =>
-      p.name.toLowerCase().includes(search.toLowerCase()) ||
-      p.biography.toLowerCase().includes(search.toLowerCase()),
-  );
+  const filteredPoliticians = useMemo(() => {
+    politicians.filter(
+      (p) =>
+        p.name.toLowerCase().includes(search.toLowerCase()) ||
+        p.biography.toLowerCase().includes(search.toLowerCase()),
+    );
+  }, [politicians]);
 
   useEffect(() => {
     (async () => {
